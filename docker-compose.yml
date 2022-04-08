@@ -1,0 +1,32 @@
+version: '3.9'
+
+volumes:
+  nextcloud:
+  postgres:
+
+services:
+
+  nextcloud-server:
+    build: ./nextcloud-app
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - NEXTCLOUD_ADMIN_USER=admin
+      - NEXTCLOUD_ADMIN_PASSWORD=admin
+      - POSTGRES_HOST=nextcloud-postgres
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=P@$$word
+    ports:
+      - "8080:80"
+    depends_on:
+      - nextcloud-postgres
+
+  nextcloud-postgres:
+    image: postgres:13.6
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=P@$$word
